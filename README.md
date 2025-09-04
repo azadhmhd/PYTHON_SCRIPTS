@@ -29,6 +29,39 @@ Edit the config section at the top of the script:
 - Brave Browser installed
 - Python 3.6+
 
+### Clipboard Manager (`clipboard_manager.py`)
+
+A macOS menu bar application that provides clipboard history management and text shortcuts for improved productivity.
+
+**Features:**
+- Runs as a menu bar app with a clipboard icon (📋)
+- Automatically monitors clipboard changes in the background
+- Maintains a history of the last 20 clipboard items
+- Text shortcuts for common phrases (e.g., `:sig` for signature)
+- Quick access to clipboard history through menu
+- Auto-paste functionality for selected history items
+
+**Usage:**
+```bash
+python3 clipboard_manager.py
+```
+
+**Text Shortcuts:**
+- `:sig` → "Best regards,\nAzad Mohamed\nDubai, UAE"
+- `:mail` → "your.email@example.com"
+- `:phone` → "+971-50-123-4567"
+
+**Features:**
+- Click "Show History" to view and select from clipboard history
+- Selected items are automatically copied and pasted
+- Configurable history size and check intervals
+- Clean, minimal interface
+
+**Requirements:**
+- macOS (uses rumps for menu bar integration)
+- Python 3.6+
+- Dependencies: `rumps`, `pyperclip`
+
 ## 🚀 Getting Started
 
 1. Clone this repository:
