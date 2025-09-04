@@ -62,6 +62,73 @@ python3 clipboard_manager.py
 - Python 3.6+
 - Dependencies: `rumps`, `pyperclip`
 
+### Activity Tracker (`tracker.py`)
+
+A comprehensive productivity tracking system that monitors your computer usage and provides detailed analytics through a web dashboard.
+
+**Features:**
+- **Real-time Activity Monitoring**: Tracks active applications and window titles
+- **Smart Browser Detection**: Special handling for Brave Browser, Chrome, and Slack tabs
+- **Idle Detection**: Automatically detects when you're away from the computer
+- **JSON Logging**: Stores detailed activity logs with timestamps and durations
+- **Background Monitoring**: Runs continuously with minimal system impact
+- **Keyboard/Mouse Input Tracking**: Uses Quartz framework for accurate activity detection
+
+**Usage:**
+```bash
+python3 tracker.py
+```
+
+**Configuration:**
+Edit the config section at the top of the script:
+- `LOG_FILE`: Output file for activity logs (default: "activity_log.json")
+- `CHECK_INTERVAL`: Seconds between activity checks (default: 2)
+- `IDLE_THRESHOLD`: Seconds of inactivity before marking as idle (default: 60)
+
+**Supported Applications:**
+- **Browsers**: Brave Browser, Chrome (with tab titles)
+- **Communication**: Slack (with window titles)
+- **Development**: VS Code, PyCharm, Terminal, Cursor
+- **General**: All other macOS applications
+
+### Activity Dashboard (`tracker_dashboard.py`)
+
+A Streamlit web application that provides comprehensive analytics and visualization of your tracked activity data.
+
+**Features:**
+- **Interactive Dashboard**: Clean, modern web interface
+- **Activity Categorization**: Automatically categorizes apps into Work, Entertainment, Social, Idle, and Other
+- **Time Analytics**: 
+  - Time spent per application
+  - Time spent by category
+  - Daily breakdown charts
+- **Data Export**: Export data to CSV or PDF formats
+- **Real-time Updates**: Refresh to see latest activity data
+
+**Usage:**
+```bash
+streamlit run tracker_dashboard.py
+```
+
+**Categories:**
+- **Work**: VS Code, PyCharm, Terminal, Notion, Slack, JIRA, Cursor
+- **Entertainment**: YouTube, Spotify, Netflix
+- **Social**: Twitter, Discord, Telegram, WhatsApp
+- **Idle**: System idle time
+- **Other**: Unclassified applications
+
+**Dashboard Sections:**
+1. **Activity Log**: Last 20 entries with detailed timestamps
+2. **Time per App**: Bar chart showing total time spent in each application
+3. **Time by Category**: Bar chart showing time distribution across categories
+4. **Daily Breakdown**: Line chart showing daily activity patterns
+5. **Export Options**: Download data as CSV or PDF reports
+
+**Requirements:**
+- Python 3.6+
+- Dependencies: `streamlit`, `pandas`, `matplotlib`, `reportlab`
+- Activity data from `tracker.py`
+
 ## 🚀 Getting Started
 
 1. Clone this repository:
