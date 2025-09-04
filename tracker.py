@@ -1,5 +1,5 @@
 import time
-import json
+import csv
 from datetime import datetime
 from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGNullWindowID
 from pynput import mouse, keyboard
@@ -7,7 +7,7 @@ import subprocess
 import os
 
 # ---------------- CONFIG ----------------
-LOG_FILE = "activity_log.json"
+LOG_FILE = "activity_log.csv"
 CHECK_INTERVAL = 2  # seconds
 IDLE_THRESHOLD = 60  # seconds
 
@@ -36,7 +36,7 @@ def get_brave_tab():
         script = 'tell application "Brave Browser" to get title of active tab of front window'
         title = subprocess.check_output(["osascript", "-e", script]).decode().strip()
         return "Brave Browser", title if title else "Brave Browser"
-    except Exception:
+    except:
         return "Brave Browser", ""
 
 def get_chrome_tab():
@@ -44,7 +44,7 @@ def get_chrome_tab():
         script = 'tell application "Google Chrome" to get title of active tab of front window'
         title = subprocess.check_output(["osascript", "-e", script]).decode().strip()
         return "Chrome", title if title else "Chrome"
-    except Exception:
+    except:
         return "Chrome", ""
 
 def get_slack_window():
@@ -52,7 +52,7 @@ def get_slack_window():
         script = 'tell application "Slack" to get title of front window'
         title = subprocess.check_output(["osascript", "-e", script]).decode().strip()
         return "Slack", title if title else "Slack"
-    except Exception:
+    except:
         return "Slack", ""
 
 def get_active_app():
@@ -66,21 +66,14 @@ def get_active_app():
     else:
         return app_name, window_title
 
-# ---------------- LOGGER ----------------
-def load_json():
-    if os.path.exists(LOG_FILE):
-        try:
-            with open(LOG_FILE, "r") as f:
-                return json.load(f)
-        except:
-            return []
-    return []
-
-def save_json(entry):
-    data = load_json()
-    data.append(entry)
-    with open(LOG_FILE, "w") as f:
-        json.dump(data, f, indent=4)
+# ---------------- CSV LOGGER ----------------
+def append_csv(entry):
+    file_exists = os.path.exists(LOG_FILE)
+    with open(LOG_FILE, "a", newline="") as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["app", "title", "start", "end", "duration_sec"])
+        writer.writerow([entry["app"], entry["title"], entry["start"], entry["end"], entry["duration_sec"]])
 
 # ---------------- TRACKER ----------------
 def log_activity():
@@ -115,7 +108,7 @@ def log_activity():
                     "end": now.isoformat(),
                     "duration_sec": int(current_session["duration_sec"])
                 }
-                save_json(entry)
+                append_csv(entry)
 
                 # Start new session
                 current_session = {
@@ -128,6 +121,7 @@ def log_activity():
             time.sleep(CHECK_INTERVAL)
 
         except KeyboardInterrupt:
+            # Save last session on exit
             entry = {
                 "app": current_session["app"],
                 "title": current_session["title"],
@@ -135,7 +129,7 @@ def log_activity():
                 "end": datetime.now().isoformat(),
                 "duration_sec": int(current_session["duration_sec"])
             }
-            save_json(entry)
+            append_csv(entry)
             print("\nTracking stopped by user.")
             break
 
